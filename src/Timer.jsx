@@ -26,10 +26,11 @@ export default class Timer extends React.Component {
   }
 
   render() {
+    const { secondsRemaining } = this.state;
     return <div
         className={Styles.timer}
         style={{color: quip.apps.ui.ColorMap.BLUE.VALUE}}>
-      0:{this.state.secondsRemaining}
+      0:{secondsRemaining < 10 ? "0" + secondsRemaining : secondsRemaining}
     </div>;
   }
 
