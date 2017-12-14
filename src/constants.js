@@ -4,4 +4,5 @@ export default {
   LETTER_SIZE: 60,
   LETTER_HSPACING: 10,
   LETTER_VSPACING: 30,
+  GAME_SECONDS: 60,
 }

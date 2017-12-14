@@ -3,8 +3,9 @@ import rand from "random-seed";
 import Constants from "./constants.js";
 import Letter from "./Letter.jsx";
 import {
-  RootRecord,
+  ResultRecord,
 } from "./model.js";
+import Timer from "./Timer.jsx";
 import {
   checkAnswer,
   getRandomScramble,
@@ -13,6 +14,7 @@ import {
 export default class Game extends React.Component {
   static propTypes = {
     seed: React.PropTypes.string.isRequired,
+    result: React.PropTypes.instanceOf(ResultRecord).isRequired,
     onFinish: React.PropTypes.func.isRequired,
   };
 
@@ -31,6 +33,7 @@ export default class Game extends React.Component {
   }
 
   render() {
+    const { result, onFinish } = this.props;
     const letters = [];
     this.state.guess.forEach((letter, i) => {
       letters[letter.originalIndex] = <Letter
@@ -50,6 +53,7 @@ export default class Game extends React.Component {
     });
     return <div>
       {letters}
+      <Timer startTime={result.get("startTime")} onFinish={onFinish}/>
     </div>;
   }
 

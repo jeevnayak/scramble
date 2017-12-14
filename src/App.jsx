@@ -1,9 +1,13 @@
 import Constants from "./constants.js";
 import Game from "./Game.jsx";
+import Leaderboard from "./Leaderboard.jsx";
 import {
   RootRecord,
 } from "./model.js";
 import Start from "./Start.jsx";
+import {
+  getSecondsRemaining,
+} from "./Timer.jsx";
 
 import Styles from "./App.less";
 
@@ -22,17 +26,14 @@ export default class App extends React.Component {
     const result = rootRecord.getResultForViewingUser();
     let contents;
     if (result) {
-      if (this.state.started) { // TODO: check time
+      const secondsRemaining = getSecondsRemaining(result.get("startTime"));
+      if (this.state.started && secondsRemaining > 0) {
         contents = <Game
           seed={rootRecord.get("seed")}
           result={result}
           onFinish={this.onFinish}/>;
       } else {
-        // TODO: render finish screen
-        contents = <Game
-          seed={rootRecord.get("seed")}
-          result={result}
-          onFinish={this.onFinish}/>;
+        contents = <Leaderboard/>;
       }
     } else {
       contents = <Start onStart={this.onStart}/>;
