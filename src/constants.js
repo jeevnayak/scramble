@@ -1,0 +1,7 @@
+export default {
+  WIDTH: 600,
+  HEIGHT: 300,
+  LETTER_SIZE: 60,
+  LETTER_HSPACING: 10,
+  LETTER_VSPACING: 30,
+}

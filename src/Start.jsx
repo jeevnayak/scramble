@@ -4,14 +4,10 @@ import {
 
 export default class Start extends React.Component {
   static propTypes = {
-    rootRecord: React.PropTypes.instanceOf(RootRecord).isRequired,
+    onStart: React.PropTypes.func.isRequired,
   };
 
   render() {
-    return <div onClick={this.onClickStart}>Start</div>;
-  }
-
-  onClickStart = () => {
-    this.props.rootRecord.createResultForViewingUser();
+    return <div onClick={this.props.onStart}>Start</div>;
   }
 }

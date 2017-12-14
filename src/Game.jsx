@@ -1,5 +1,6 @@
 import rand from "random-seed";
 
+import Constants from "./constants.js";
 import Letter from "./Letter.jsx";
 import {
   RootRecord,
@@ -11,12 +12,13 @@ import {
 
 export default class Game extends React.Component {
   static propTypes = {
-    rootRecord: React.PropTypes.instanceOf(RootRecord).isRequired,
+    seed: React.PropTypes.string.isRequired,
+    onFinish: React.PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super();
-    this.rand = rand.create(props.rootRecord.get("seed"));
+    this.rand = rand.create(props.seed);
     this.state = this.getNewScrambleState();
   }
 
@@ -34,21 +36,26 @@ export default class Game extends React.Component {
       letters[letter.originalIndex] = <Letter
         key={letter.key}
         letter={letter.letter}
-        top={60}
-        left={70 * i}/>;
+        top={(Constants.HEIGHT - Constants.LETTER_VSPACING) / 2 - Constants.LETTER_SIZE}
+        left={this.getLetterLeft(i)}/>;
     });
     this.state.letters.forEach((letter, i) => {
       if (letter) {
         letters[letter.originalIndex] = <Letter
           key={letter.key}
           letter={letter.letter}
-          top={180}
-          left={70 * i}/>;
+          top={(Constants.HEIGHT + Constants.LETTER_VSPACING) / 2}
+          left={this.getLetterLeft(i)}/>;
       }
     });
     return <div>
       {letters}
     </div>;
+  }
+
+  getLetterLeft(i) {
+    return (Constants.WIDTH + Constants.LETTER_HSPACING) / 2 +
+      (i - 3) * (Constants.LETTER_SIZE + Constants.LETTER_HSPACING);
   }
 
   getNewScrambleState() {

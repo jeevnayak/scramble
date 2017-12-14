@@ -1,3 +1,4 @@
+import Constants from "./constants.js";
 import Game from "./Game.jsx";
 import {
   RootRecord,
@@ -11,12 +12,9 @@ export default class App extends React.Component {
     rootRecord: React.PropTypes.instanceOf(RootRecord).isRequired,
   };
 
-  componentDidMount() {
-    this.props.rootRecord.get("results").listen(this.onResultsChanged);
-  }
-
-  componentWillUnmount() {
-    this.props.rootRecord.get("results").unlisten(this.onResultsChanged);
+  constructor(props) {
+    super();
+    this.state = {started: false};
   }
 
   render() {
@@ -24,20 +22,38 @@ export default class App extends React.Component {
     const result = rootRecord.getResultForViewingUser();
     let contents;
     if (result) {
-      contents = <Game rootRecord={rootRecord}/>;
+      if (this.state.started) { // TODO: check time
+        contents = <Game
+          seed={rootRecord.get("seed")}
+          result={result}
+          onFinish={this.onFinish}/>;
+      } else {
+        // TODO: render finish screen
+        contents = <Game
+          seed={rootRecord.get("seed")}
+          result={result}
+          onFinish={this.onFinish}/>;
+      }
     } else {
-      contents = <Start rootRecord={rootRecord}/>;
+      contents = <Start onStart={this.onStart}/>;
     }
     return <div
         className={Styles.app}
         style={{
+          width: Constants.WIDTH,
+          height: Constants.HEIGHT,
           backgroundColor: quip.apps.ui.ColorMap.BLUE.VALUE_LIGHT,
         }}>
       {contents}
     </div>;
   }
 
-  onResultsChanged = () => {
+  onStart = () => {
+    this.props.rootRecord.createResultForViewingUser();
+    this.setState({started: true});
+  }
+
+  onFinish = () => {
     this.forceUpdate();
   }
 }

@@ -1,3 +1,5 @@
+import Constants from "./constants.js";
+
 import Styles from "./Letter.less";
 
 export default class Letter extends React.Component {
@@ -12,6 +14,8 @@ export default class Letter extends React.Component {
     return <div
         className={Styles.letter}
         style={{
+          width: Constants.LETTER_SIZE,
+          height: Constants.LETTER_SIZE,
           transform: `translate3d(${left}px, ${top}px, 0px)`,
           backgroundColor: quip.apps.ui.ColorMap.BLUE.VALUE,
         }}>
