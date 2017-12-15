@@ -111,13 +111,26 @@ export default class Game extends React.Component {
     const { letters, guess } = this.state;
     const lastLetter = guess.pop();
     if (lastLetter) {
-      for (let i = 0; i < letters.length; i++) {
-        if (!letters[i]) {
-          letters[i] = lastLetter;
-          break;
-        }
-      }
+      this.insertIntoLetters(letters, lastLetter);
       this.setState({ letters, guess });
+    }
+  }
+
+  clearGuess() {
+    let { letters, guess } = this.state;
+    guess.forEach((letter) => {
+      this.insertIntoLetters(letters, letter);
+    });
+    guess = [];
+    this.setState({ letters, guess });
+  }
+
+  insertIntoLetters(letters, letter) {
+    for (let i = 0; i < letters.length; i++) {
+      if (!letters[i]) {
+        letters[i] = letter;
+        return;
+      }
     }
   }
 
@@ -149,19 +162,21 @@ export default class Game extends React.Component {
   }
 
   onKeyDown = (e) => {
-    if (e.keyCode >= 65 && e.keyCode <= 90) {
+    if (e.keyCode >= 65 && e.keyCode <= 90) { // letter
       const c = String.fromCharCode(e.keyCode + 32);
       this.addLetterToGuess(c);
     } else if (e.keyCode === 8) {
       this.removeLastLetterFromGuess();
-    } else if (e.keyCode === 13) {
+    } else if (e.keyCode === 13) { // Return
       const currentGuess = this.getCurrentGuess();
       if (checkAnswer(this.state.scramble, currentGuess)) {
         const newState = this.getNewScrambleState();
         this.props.result.completeScramble(currentGuess, newState.scramble);
         this.setState(newState);
+      } else {
+        this.clearGuess();
       }
-    } else if (e.keyCode === 32) {
+    } else if (e.keyCode === 32) { // Space
       this.shuffleLetters();
     }
   }
