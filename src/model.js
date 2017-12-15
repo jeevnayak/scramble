@@ -39,10 +39,27 @@ export class ResultRecord extends quip.apps.Record {
   static getProperties = () => ({
     userId: "string",
     startTime: "number",
+    completed: "array",
+    currentScramble: "string",
   });
 
   static getDefaultProperties = () => ({
     startTime: Date.now(),
+    completed: [],
   });
+
+  getCompleted() {
+    return this.get("completed").getRecords();
+  }
+
+  completeScramble(answer, nextScramble) {
+    let completed = this.get("completed");
+    completed.push({
+      answer: answer,
+      time: Date.now(),
+    });
+    this.set("completed", completed);
+    this.set("currentScramble", nextScramble);
+  }
 }
 quip.apps.registerClass(ResultRecord, "result-record");

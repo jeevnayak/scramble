@@ -17,7 +17,7 @@ export default class Letter extends React.Component {
           width: Constants.LETTER_SIZE,
           height: Constants.LETTER_SIZE,
           transform: `translate3d(${left}px, ${top}px, 0px)`,
-          backgroundColor: quip.apps.ui.ColorMap.BLUE.VALUE,
+          backgroundColor: quip.apps.ui.ColorMap.YELLOW.VALUE,
         }}>
       {letter.toUpperCase()}
     </div>;

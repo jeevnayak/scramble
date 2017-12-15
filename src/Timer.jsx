@@ -11,7 +11,7 @@ export default class Timer extends React.Component {
   constructor(props) {
     super();
     this.interval = null;
-    this.state = { secondsRemaining: getSecondsRemaining(props.startTime) };
+    this.state = {secondsRemaining: getSecondsRemaining(props.startTime)};
   }
 
   componentDidMount() {

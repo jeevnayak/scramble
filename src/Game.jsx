@@ -5,11 +5,14 @@ import Letter from "./Letter.jsx";
 import {
   ResultRecord,
 } from "./model.js";
+import Score from "./Score.jsx";
 import Timer from "./Timer.jsx";
 import {
   checkAnswer,
   getRandomScramble,
 } from "./words.js";
+
+import Styles from "./Game.less";
 
 export default class Game extends React.Component {
   static propTypes = {
@@ -22,6 +25,7 @@ export default class Game extends React.Component {
     super();
     this.rand = rand.create(props.seed);
     this.state = this.getNewScrambleState();
+    props.result.set("currentScramble", this.state.scramble);
   }
 
   componentDidMount() {
@@ -52,8 +56,14 @@ export default class Game extends React.Component {
       }
     });
     return <div>
+      <div className={Styles.header}>
+        <div className={Styles.timer}>
+          <Timer startTime={result.get("startTime")} onFinish={onFinish}/>
+        </div>
+        <Score result={result}/>
+        <div className={Styles.spacer}></div>
+      </div>
       {letters}
-      <Timer startTime={result.get("startTime")} onFinish={onFinish}/>
     </div>;
   }
 
@@ -145,8 +155,11 @@ export default class Game extends React.Component {
     } else if (e.keyCode === 8) {
       this.removeLastLetterFromGuess();
     } else if (e.keyCode === 13) {
-      if (checkAnswer(this.state.scramble, this.getCurrentGuess())) {
-        this.setState(this.getNewScrambleState());
+      const currentGuess = this.getCurrentGuess();
+      if (checkAnswer(this.state.scramble, currentGuess)) {
+        const newState = this.getNewScrambleState();
+        this.props.result.completeScramble(currentGuess, newState.scramble);
+        this.setState(newState);
       }
     } else if (e.keyCode === 32) {
       this.shuffleLetters();
