@@ -8,3 +8,7 @@ export function getRandomScramble(rand) {
 export function checkAnswer(scramble, answer) {
   return words[scramble].includes(answer);
 }
+
+export function getAnswers(scramble) {
+  return words[scramble];
+}

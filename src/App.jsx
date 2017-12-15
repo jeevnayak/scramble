@@ -4,6 +4,7 @@ import Leaderboard from "./Leaderboard.jsx";
 import {
   RootRecord,
 } from "./model.js";
+import Result from "./Result.jsx";
 import Start from "./Start.jsx";
 import {
   getSecondsRemaining,
@@ -33,7 +34,7 @@ export default class App extends React.Component {
           result={result}
           onFinish={this.onFinish}/>;
       } else {
-        contents = <Leaderboard/>;
+        contents = <Result result={result}/>;
       }
     } else {
       contents = <Start onStart={this.onStart}/>;

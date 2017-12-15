@@ -48,8 +48,8 @@ export class ResultRecord extends quip.apps.Record {
     completed: [],
   });
 
-  getCompleted() {
-    return this.get("completed").getRecords();
+  getScore() {
+    return this.get("completed").length;
   }
 
   completeScramble(answer, nextScramble) {

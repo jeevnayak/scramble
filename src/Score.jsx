@@ -11,26 +11,26 @@ export default class Score extends React.Component {
 
   constructor(props) {
     super();
-    this.state = {numCompleted: props.result.get("completed").length};
+    this.state = {score: props.result.getScore()};
   }
 
   componentDidMount() {
-    this.props.result.listen(this.updateNumCompleted);
+    this.props.result.listen(this.updateScore);
   }
 
   componentWillUnmount() {
-    this.props.result.unlisten(this.updateNumCompleted);
+    this.props.result.unlisten(this.updateScore);
   }
 
   render() {
     return <div
         className={Styles.score}
         style={{color: quip.apps.ui.ColorMap.BLUE.VALUE}}>
-      {this.state.numCompleted}
+      {this.state.score}
     </div>;
   }
 
-  updateNumCompleted = () => {
-    this.setState({numCompleted: this.props.result.get("completed").length});
+  updateScore = () => {
+    this.setState({score: this.props.result.getScore()});
   }
 }

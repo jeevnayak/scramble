@@ -26,11 +26,10 @@ export default class Timer extends React.Component {
   }
 
   render() {
-    const { secondsRemaining } = this.state;
     return <div
         className={Styles.timer}
         style={{color: quip.apps.ui.ColorMap.BLUE.VALUE}}>
-      0:{secondsRemaining < 10 ? "0" + secondsRemaining : secondsRemaining}
+      {formatSeconds(this.state.secondsRemaining)}
     </div>;
   }
 
@@ -43,7 +42,12 @@ export default class Timer extends React.Component {
   }
 }
 
-export function getSecondsRemaining(startTime) {
-  const secondsElapsed = Math.floor((Date.now() - startTime) / 1000);
+export function getSecondsRemaining(startTime, currentTime) {
+  currentTime = currentTime || Date.now();
+  const secondsElapsed = Math.floor((currentTime - startTime) / 1000);
   return Constants.GAME_SECONDS - secondsElapsed;
+}
+
+export function formatSeconds(seconds) {
+  return "0:" + (seconds < 10 ? "0" + seconds : seconds);
 }
