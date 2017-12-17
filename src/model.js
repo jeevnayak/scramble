@@ -62,14 +62,23 @@ export class ResultRecord extends quip.apps.Record {
   }
 
   getScore() {
-    return this.get("completed").length;
+    let score = 0;
+    for (let round of this.get("completed")) {
+      if (round.skipped) {
+        score -= 1;
+      } else {
+        score += 1;
+      }
+    }
+    return score;
   }
 
-  completeScramble(answer, nextScramble) {
+  completeScramble(answer, nextScramble, skipped) {
     let completed = this.get("completed");
     completed.push({
       answer: answer,
       time: Date.now(),
+      skipped: skipped,
     });
     this.set("completed", completed);
     this.set("currentScramble", nextScramble);

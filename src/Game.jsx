@@ -178,6 +178,10 @@ export default class Game extends React.Component {
       }
     } else if (e.keyCode === 32) { // Space
       this.shuffleLetters();
+    } else if (e.keyCode === 27) { // Esc
+      const newState = this.getNewScrambleState();
+      this.props.result.completeScramble(this.state.scramble, newState.scramble, true);
+      this.setState(newState);
     }
   }
 }

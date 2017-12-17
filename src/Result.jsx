@@ -22,8 +22,9 @@ export default class Result extends React.Component {
     const { result, onShowLeaderboard } = this.props;
     const startTime = result.get("startTime");
     let rounds = result.get("completed").map((round) => <Round
-      word={round.answer}
-      secondsRemaining={getSecondsRemaining(startTime, round.time)}/>);
+      word={round.skipped ? getAnswers(round.answer)[0] : round.answer}
+      secondsRemaining={getSecondsRemaining(startTime, round.time)}
+      skipped={round.skipped}/>);
     rounds.push(<Round word={getAnswers(result.get("currentScramble"))[0]}/>)
     return <div className={Styles.results}>
       <div
@@ -43,11 +44,12 @@ class Round extends React.Component {
   static propTypes = {
     word: React.PropTypes.string.isRequired,
     secondsRemaining: React.PropTypes.number,
+    skipped: React.PropTypes.bool,
   };
 
   render() {
-    const { word, secondsRemaining } = this.props;
-    const color = secondsRemaining ?
+    const { word, secondsRemaining, skipped } = this.props;
+    const color = secondsRemaining && !skipped  ?
       quip.apps.ui.ColorMap.YELLOW.VALUE : quip.apps.ui.ColorMap.RED.VALUE;
     return <div className={Styles.round} style={{ color }}>
       <div>{word.toUpperCase()}</div>
