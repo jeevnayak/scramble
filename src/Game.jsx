@@ -14,6 +14,8 @@ import {
 
 import Styles from "./Game.less";
 
+const SPOT_SIZE = 20;
+
 export default class Game extends React.Component {
   static propTypes = {
     seed: React.PropTypes.string.isRequired,
@@ -55,6 +57,18 @@ export default class Game extends React.Component {
           left={this.getLetterLeft(i)}/>;
       }
     });
+    const spots = [];
+    for (let i = 0; i < this.state.letters.length; i++) {
+      const style = {
+        width: SPOT_SIZE,
+        height: SPOT_SIZE,
+        top: (Constants.HEIGHT + Constants.LETTER_VSPACING +
+          Constants.LETTER_SIZE - SPOT_SIZE) / 2,
+        left: this.getLetterLeft(i) + (Constants.LETTER_SIZE - SPOT_SIZE) / 2,
+        backgroundColor: quip.apps.ui.ColorMap.BLUE.VALUE,
+      };
+      spots.push(<div key={i} className={Styles.spot} style={style}/>);
+    }
     return <div>
       <div className={Styles.header}>
         <div className={Styles.timer}>
@@ -63,6 +77,7 @@ export default class Game extends React.Component {
         <Score result={result}/>
         <div className={Styles.spacer}></div>
       </div>
+      {spots}
       {letters}
     </div>;
   }
