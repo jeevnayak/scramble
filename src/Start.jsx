@@ -14,6 +14,7 @@ export default class Start extends React.Component {
 
   constructor(props) {
     super();
+    this.timeout = null;
     this.interval = null;
     const letters = ["s", "c", "r", "a", "m", "b", "l", "e"].map(
       (letter, i) => ({
@@ -24,12 +25,15 @@ export default class Start extends React.Component {
   }
 
   componentDidMount() {
-    window.setTimeout(() => {
+    this.timeout = window.setTimeout(() => {
       this.interval = window.setInterval(this.update, 1000);
     }, 3000);
   }
 
   componentWillUnmount() {
+    if (this.timeout) {
+      window.clearTimeout(this.timeout);
+    }
     if (this.interval) {
       window.clearInterval(this.interval);
     }
