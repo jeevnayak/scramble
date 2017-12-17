@@ -1,4 +1,6 @@
-import Constants from "./constants.js";
+import {
+  getSecondsRemaining,
+} from "./model.js";
 
 import Styles from "./Timer.less";
 
@@ -40,12 +42,6 @@ export default class Timer extends React.Component {
       this.props.onFinish();
     }
   }
-}
-
-export function getSecondsRemaining(startTime, currentTime) {
-  currentTime = currentTime || Date.now();
-  const secondsElapsed = Math.floor((currentTime - startTime) / 1000);
-  return Constants.GAME_SECONDS - secondsElapsed;
 }
 
 export function formatSeconds(seconds) {

@@ -2,13 +2,11 @@ import Constants from "./constants.js";
 import Game from "./Game.jsx";
 import Leaderboard from "./Leaderboard.jsx";
 import {
+  getSecondsRemaining,
   RootRecord,
 } from "./model.js";
 import Result from "./Result.jsx";
 import Start from "./Start.jsx";
-import {
-  getSecondsRemaining,
-} from "./Timer.jsx";
 
 import Styles from "./App.less";
 
@@ -19,7 +17,10 @@ export default class App extends React.Component {
 
   constructor(props) {
     super();
-    this.state = {started: false};
+    this.state = {
+      started: false,
+      showLeaderboard: false,
+    };
   }
 
   render() {
@@ -33,8 +34,14 @@ export default class App extends React.Component {
           seed={rootRecord.get("seed")}
           result={result}
           onFinish={this.onFinish}/>;
+      } else if (this.state.showLeaderboard) {
+        contents = <Leaderboard
+          rootRecord={rootRecord}
+          onBack={this.onLeaderboardBack}/>;
       } else {
-        contents = <Result result={result}/>;
+        contents = <Result
+          result={result}
+          onShowLeaderboard={this.onShowLeaderboard}/>;
       }
     } else {
       contents = <Start onStart={this.onStart}/>;
@@ -57,5 +64,13 @@ export default class App extends React.Component {
 
   onFinish = () => {
     this.forceUpdate();
+  }
+
+  onShowLeaderboard = () => {
+    this.setState({showLeaderboard: true});
+  }
+
+  onLeaderboardBack = () => {
+    this.setState({showLeaderboard: false});
   }
 }

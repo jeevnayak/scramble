@@ -1,3 +1,5 @@
+import Constants from "./constants.js";
+
 export class RootRecord extends quip.apps.RootRecord {
   static getProperties = () => ({
     seed: "string",
@@ -32,6 +34,13 @@ export class RootRecord extends quip.apps.RootRecord {
     return this.getResults().find(
       (result) => result.get("userId") === user.getId());
   }
+
+  getCompletedResults() {
+    return this.getResults()
+      .filter((result) => (
+        getSecondsRemaining(result.get("startTime")) <= 0 && result.getUser()))
+      .sort((r1, r2) => r2.getScore() - r1.getScore());
+  }
 }
 quip.apps.registerClass(RootRecord, "root-record");
 
@@ -48,6 +57,10 @@ export class ResultRecord extends quip.apps.Record {
     completed: [],
   });
 
+  getUser() {
+    return quip.apps.getUserById(this.get("userId"));
+  }
+
   getScore() {
     return this.get("completed").length;
   }
@@ -63,3 +76,9 @@ export class ResultRecord extends quip.apps.Record {
   }
 }
 quip.apps.registerClass(ResultRecord, "result-record");
+
+export function getSecondsRemaining(startTime, currentTime) {
+  currentTime = currentTime || Date.now();
+  const secondsElapsed = Math.floor((currentTime - startTime) / 1000);
+  return Constants.GAME_SECONDS - secondsElapsed;
+}

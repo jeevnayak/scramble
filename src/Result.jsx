@@ -1,9 +1,10 @@
+import Button from "./Button.jsx";
 import {
+  getSecondsRemaining,
   ResultRecord,
 } from "./model.js";
 import {
   formatSeconds,
-  getSecondsRemaining,
 } from "./Timer.jsx";
 import {
   getAnswers,
@@ -14,10 +15,11 @@ import Styles from "./Result.less";
 export default class Result extends React.Component {
   static propTypes = {
     result: React.PropTypes.instanceOf(ResultRecord).isRequired,
+    onShowLeaderboard: React.PropTypes.func.isRequired,
   };
 
   render() {
-    const { result } = this.props;
+    const { result, onShowLeaderboard } = this.props;
     const startTime = result.get("startTime");
     let rounds = result.get("completed").map((round) => <Round
       word={round.answer}
@@ -30,6 +32,9 @@ export default class Result extends React.Component {
         Your Score: {result.getScore()}
       </div>
       <div className={Styles.rounds}>{rounds}</div>
+      <div className={Styles.leaderboardButton}>
+        <Button text="LEADERBOARD" size={14} onClick={onShowLeaderboard}/>
+      </div>
     </div>;
   }
 }
