@@ -47,7 +47,8 @@ export default class Game extends React.Component {
         key={letter.key}
         letter={letter.letter}
         top={(Constants.HEIGHT - Constants.LETTER_VSPACING) / 2 - Constants.LETTER_SIZE}
-        left={this.getLetterLeft(i)}/>;
+        left={this.getLetterLeft(i)}
+        onClick={() => this.removeLetterAtIndexFromGuess(i)}/>;
     });
     this.state.letters.forEach((letter, i) => {
       if (letter) {
@@ -55,7 +56,8 @@ export default class Game extends React.Component {
           key={letter.key}
           letter={letter.letter}
           top={(Constants.HEIGHT + Constants.LETTER_VSPACING) / 2}
-          left={this.getLetterLeft(i)}/>;
+          left={this.getLetterLeft(i)}
+          onClick={() => this.addLetterAtIndexToGuess(i)}/>;
       }
     });
     const spots = [];
@@ -136,26 +138,28 @@ export default class Game extends React.Component {
 
   addLetterToGuess(l) {
     const { letters, guess } = this.state;
-    let found = false;
     for (let i = 0; i < letters.length; i++) {
       const letter = letters[i];
       if (letter && letter.letter === l) {
-        guess.push(letter);
-        letters[i] = undefined;
-        found = true;
+        this.addLetterAtIndexToGuess(i);
         break;
       }
     }
-    if (found) {
-      this.setState({ letters, guess });
-    }
   }
 
-  removeLastLetterFromGuess() {
+  addLetterAtIndexToGuess(i) {
     const { letters, guess } = this.state;
-    const lastLetter = guess.pop();
-    if (lastLetter) {
-      this.insertIntoLetters(letters, lastLetter);
+    guess.push(letters[i]);
+    letters[i] = undefined;
+    this.setState({ letters, guess });
+  }
+
+  removeLetterAtIndexFromGuess(i) {
+    const { letters, guess } = this.state;
+    const letter = guess[i];
+    guess.splice(i, 1);
+    if (letter) {
+      this.insertIntoLetters(letters, letter);
       this.setState({ letters, guess });
     }
   }
@@ -204,7 +208,7 @@ export default class Game extends React.Component {
       const c = String.fromCharCode(e.keyCode + 32);
       this.addLetterToGuess(c);
     } else if (e.keyCode === 8) {
-      this.removeLastLetterFromGuess();
+      this.removeLetterAtIndexFromGuess(this.state.guess.length - 1);
     } else if (e.keyCode === 13) { // Return
       this.submit();
     } else if (e.keyCode === 32) { // Space
