@@ -1,5 +1,6 @@
 import rand from "random-seed";
 
+import Button from "./Button.jsx";
 import Constants from "./constants.js";
 import Letter from "./Letter.jsx";
 import {
@@ -69,13 +70,18 @@ export default class Game extends React.Component {
       };
       spots.push(<div key={i} className={Styles.spot} style={style}/>);
     }
-    return <div>
+    return <div className={Styles.game}>
       <div className={Styles.header}>
         <div className={Styles.timer}>
           <Timer startTime={result.get("startTime")} onFinish={onFinish}/>
         </div>
         <Score result={result}/>
         <div className={Styles.spacer}></div>
+      </div>
+      <div className={Styles.footer}>
+        <Button text="SKIP" size={12} onClick={this.skip}/>
+        <Button text="SCRAMBLE" size={12} onClick={this.scramble}/>
+        <Button text="SUBMIT" size={12} onClick={this.submit}/>
       </div>
       {spots}
       {letters}
@@ -103,6 +109,29 @@ export default class Game extends React.Component {
       letters: letters,
       guess: [],
     };
+  }
+
+  skip = () => {
+    const newState = this.getNewScrambleState();
+    this.props.result.completeScramble(this.state.scramble, newState.scramble, true);
+    this.setState(newState);
+  }
+
+  scramble = () => {
+    const { letters } = this.state;
+    this.shuffle(letters);
+    this.setState({ letters });
+  }
+
+  submit = () => {
+    const currentGuess = this.getCurrentGuess();
+    if (checkAnswer(this.state.scramble, currentGuess)) {
+      const newState = this.getNewScrambleState();
+      this.props.result.completeScramble(currentGuess, newState.scramble);
+      this.setState(newState);
+    } else {
+      this.clearGuess();
+    }
   }
 
   addLetterToGuess(l) {
@@ -157,12 +186,6 @@ export default class Game extends React.Component {
     return currentGuess;
   }
 
-  shuffleLetters() {
-    const { letters } = this.state;
-    this.shuffle(letters);
-    this.setState({ letters })
-  }
-
   shuffle(array, rand) {
     let i = 0
     let j = 0;
@@ -183,20 +206,11 @@ export default class Game extends React.Component {
     } else if (e.keyCode === 8) {
       this.removeLastLetterFromGuess();
     } else if (e.keyCode === 13) { // Return
-      const currentGuess = this.getCurrentGuess();
-      if (checkAnswer(this.state.scramble, currentGuess)) {
-        const newState = this.getNewScrambleState();
-        this.props.result.completeScramble(currentGuess, newState.scramble);
-        this.setState(newState);
-      } else {
-        this.clearGuess();
-      }
+      this.submit();
     } else if (e.keyCode === 32) { // Space
-      this.shuffleLetters();
+      this.scramble();
     } else if (e.keyCode === 27) { // Esc
-      const newState = this.getNewScrambleState();
-      this.props.result.completeScramble(this.state.scramble, newState.scramble, true);
-      this.setState(newState);
+      this.skip();
     }
   }
 }
