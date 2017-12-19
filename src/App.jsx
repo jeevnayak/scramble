@@ -20,27 +20,30 @@ export default class App extends React.Component {
     this.state = {
       started: false,
       showLeaderboard: false,
+      showResult: null,
     };
   }
 
   render() {
     const { rootRecord } = this.props;
-    const result = rootRecord.getResultForViewingUser();
+    const { started, showLeaderboard, showResult } = this.state;
+    const viewerResult = rootRecord.getResultForViewingUser();
     let contents;
-    if (result) {
-      const secondsRemaining = getSecondsRemaining(result.get("startTime"));
-      if (this.state.started && secondsRemaining > 0) {
+    if (viewerResult) {
+      const secondsRemaining = getSecondsRemaining(viewerResult.get("startTime"));
+      if (started && secondsRemaining > 0) {
         contents = <Game
           seed={rootRecord.get("seed")}
-          result={result}
+          result={viewerResult}
           onFinish={this.onFinish}/>;
-      } else if (this.state.showLeaderboard) {
+      } else if (showLeaderboard) {
         contents = <Leaderboard
           rootRecord={rootRecord}
+          onClickResult={this.showResult}
           onBack={this.onLeaderboardBack}/>;
       } else {
         contents = <Result
-          result={result}
+          result={showResult || viewerResult}
           onShowLeaderboard={this.onShowLeaderboard}/>;
       }
     } else {
@@ -68,6 +71,13 @@ export default class App extends React.Component {
 
   onShowLeaderboard = () => {
     this.setState({showLeaderboard: true});
+  }
+
+  showResult = (result) => {
+    this.setState({
+      showLeaderboard: false,
+      showResult: result,
+    });
   }
 
   onLeaderboardBack = () => {
