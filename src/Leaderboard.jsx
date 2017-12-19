@@ -1,4 +1,3 @@
-import Button from "./Button.jsx";
 import {
   RootRecord,
 } from "./model.js";
@@ -9,7 +8,6 @@ export default class Leaderboard extends React.Component {
   static propTypes = {
     rootRecord: React.PropTypes.instanceOf(RootRecord).isRequired,
     onClickResult: React.PropTypes.func.isRequired,
-    onBack: React.PropTypes.func.isRequired,
   };
 
   render() {
@@ -17,6 +15,7 @@ export default class Leaderboard extends React.Component {
     const results = rootRecord.getCompletedResults()
       .slice(0, 10)
       .map((result, i) => <Result
+        key={i}
         user={result.getUser()}
         score={result.getScore()}
         position={i + 1}
@@ -28,9 +27,6 @@ export default class Leaderboard extends React.Component {
         Leaderboard
       </div>
       {results}
-      <div className={Styles.backButton}>
-        <Button text="BACK" size={14} onClick={onBack}/>
-      </div>
     </div>;
   }
 }

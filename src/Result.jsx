@@ -25,12 +25,15 @@ export default class Result extends React.Component {
       word={round.skipped ? getAnswers(round.answer)[0] : round.answer}
       secondsRemaining={getSecondsRemaining(startTime, round.time)}
       skipped={round.skipped}/>);
-    rounds.push(<Round word={getAnswers(result.get("currentScramble"))[0]}/>)
+    rounds.push(<Round word={getAnswers(result.get("currentScramble"))[0]}/>);
+    const user = result.getUser();
+    const name = !user || user.getId() === quip.apps.getViewingUser().getId() ?
+      "Your" : user.getFirstName() + "'s";
     return <div className={Styles.results}>
       <div
           className={Styles.score}
           style={{ color: quip.apps.ui.ColorMap.BLUE.VALUE }}>
-        Your Score: {result.getScore()}
+        {name} Score: {result.getScore()}
       </div>
       <div className={Styles.rounds}>{rounds}</div>
       <div className={Styles.leaderboardButton}>

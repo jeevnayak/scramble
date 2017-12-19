@@ -39,8 +39,7 @@ export default class App extends React.Component {
       } else if (showLeaderboard) {
         contents = <Leaderboard
           rootRecord={rootRecord}
-          onClickResult={this.showResult}
-          onBack={this.onLeaderboardBack}/>;
+          onClickResult={this.showResult}/>;
       } else {
         contents = <Result
           result={showResult || viewerResult}
@@ -78,9 +77,5 @@ export default class App extends React.Component {
       showLeaderboard: false,
       showResult: result,
     });
-  }
-
-  onLeaderboardBack = () => {
-    this.setState({showLeaderboard: false});
   }
 }
