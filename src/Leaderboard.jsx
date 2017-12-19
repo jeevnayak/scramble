@@ -13,7 +13,7 @@ export default class Leaderboard extends React.Component {
 
   render() {
     const { rootRecord, onBack } = this.props;
-    const results = rootRecord.getCompletedResults().map((result, i) => <Result
+    const results = rootRecord.getCompletedResults().slice(0, 10).map((result, i) => <Result
       user={result.getUser()}
       score={result.getScore()}
       position={i + 1}/>);
