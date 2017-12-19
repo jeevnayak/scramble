@@ -7,14 +7,17 @@ def generateWordList(length):
             with open("2of12inf.txt", "r") as mediumdict:
                 with open("enable2k.txt", "r") as bigdict:
                     with open("wordlist.txt", "w") as outfile:
+                        tinydict_words = set()
                         tinydict_scrambles = set()
                         for line in tinydict:
                             word = line[:-2]
                             if len(word) != length or not word.isalpha():
                                 continue
                             scramble = ''.join(sorted(word))
+                            tinydict_words.add(word)
                             tinydict_scrambles.add(scramble)
 
+                        smalldict_words = set()
                         smalldict_scrambles = set()
                         for line in smalldict:
                             word = line[:-2]
@@ -22,6 +25,7 @@ def generateWordList(length):
                                 continue
                             scramble = ''.join(sorted(word))
                             if scramble in tinydict_scrambles:
+                                smalldict_words.add(word)
                                 smalldict_scrambles.add(scramble)
 
                         scramble_map = collections.defaultdict(list)
@@ -31,7 +35,11 @@ def generateWordList(length):
                                 continue
                             scramble = ''.join(sorted(word))
                             if scramble in smalldict_scrambles:
-                                scramble_map[scramble].append(word)
+                                if word in tinydict_words and word in smalldict_words:
+                                    scramble_map[scramble].insert(0, word)
+                                else:
+                                    print word
+                                    scramble_map[scramble].append(word)
 
                         for line in bigdict:
                             word = line[:-1]
