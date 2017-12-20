@@ -65,6 +65,8 @@ export default class App extends React.Component {
   }
 
   onFinish = () => {
+    const score = this.props.rootRecord.getResultForViewingUser().getScore();
+    quip.apps.sendMessage(`Scored ${score} at Scramble`);
     this.forceUpdate();
   }
 
